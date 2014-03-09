@@ -15,11 +15,13 @@ NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'tomasr/molokai'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'tacahiroy/ctrlp-funky'
+NeoBundle 'Shougo/neocomplcache.vim'
+NeoBundle 'scrooloose/syntastic'
+NeoBundle 'bling/vim-airline'
 
 filetype plugin indent on
 
 NeoBundleCheck
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " General editor settings
@@ -113,13 +115,62 @@ let g:ctrlp_mruf_max = 250 				" number of recently opened files
 
 set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
 
-" let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\v[\/]\.(git|hg|svn)$',
   \ 'file': '\v\.(exe|so|dll)$',
   \ 'link': 'some_bad_symbolic_links',
   \ }
 
+" Syntastic
+let g:syntastic_check_on_wq = 1
+let g:syntastic_check_header = 1
+let g:syntastic_error_symbol='✕'
+let g:syntastic_warning_symbol='✕'
+let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [], 'passive_filetypes': [] }
+let g:syntastic_python_checkers = ['pylint', 'flake8']
+let g:syntastic_javascript_checkers = ['jslint', 'jshint']
+let g:syntastic_cpp_compiler_options = ' -std=c++11'
+
+" Airline
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+
+let g:airline_left_sep = '»'
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '«'
+let g:airline_right_sep = '◀'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.whitespace = 'Ξ'
+
+" Neocomplcache
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplcache.
+let g:neocomplcache_enable_at_startup = 1
+" Use smartcase.
+let g:neocomplcache_enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplcache_min_syntax_length = 3
+let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+
+let g:neocomplcache_dictionary_filetype_lists = {
+  \ 'default' : '',
+  \ }
+
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+    return neocomplcache#smart_close_popup() . "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplcache#close_popup()
+inoremap <expr><C-e>  neocomplcache#cancel_popup()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Autocommands
@@ -130,6 +181,13 @@ if has("autocmd")
     autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
     autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
     autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+
+    " Neocomplcache
+    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+    autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+    autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 endif
 
 
@@ -170,26 +228,9 @@ colorscheme molokai
 if has("gui_running")
   syntax on
   set hlsearch
-  set guifont=Consolas:h10:cANSI
+  set guifont=Terminus\ 9
   set guioptions=ac             " remove toolbar
 endif
-
-
-"""""""""""""""""""""""""""""""""""""""""""""
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" GUI settings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set t_Co=256
-colorscheme molokai
-
-if has("gui_running")
-  syntax on
-  set hlsearch
-  set guifont=Consolas:h10:cANSI
-  set guioptions=ac             " remove toolbar
-endif
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Cursor colors
