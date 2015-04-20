@@ -3,7 +3,7 @@ if has('vim_starting')
     set nocompatible
   endif
 
-  set runtimepath+=/home/vantsi/.vim/bundle/neobundle.vim/
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
 
 call neobundle#begin(expand('~/.vim/bundle'))
