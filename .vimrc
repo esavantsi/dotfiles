@@ -1,14 +1,15 @@
 if has('vim_starting')
-  set nocompatible
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
+  if &compatible
+    set nocompatible
+  endif
+
+  set runtimepath+=/home/vantsi/.vim/bundle/neobundle.vim/
 endif
 
-call neobundle#rc(expand('~/.vim/bundle/'))
-
+call neobundle#begin(expand('~/.vim/bundle'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 " Bundles
-NeoBundle 'mattn/zencoding-vim'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'kien/ctrlp.vim'
@@ -17,7 +18,9 @@ NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'tacahiroy/ctrlp-funky'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'bling/vim-airline'
+NeoBundle 'vim-scripts/tComment'
 
+call neobundle#end()
 filetype plugin indent on
 
 NeoBundleCheck
@@ -27,7 +30,7 @@ NeoBundleCheck
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 scriptencoding utf-8
 
-set number                      " Line numbers
+set number
 set title
 set cursorline
 set mouse=a
@@ -43,7 +46,7 @@ set clipboard=unnamed
 set foldenable
 set viewoptions=folds,options,cursor,unix,slash
 set foldopen=block,insert,jump,mark,percent,quickfix,search,tag,undo
-set noerrorbells                " No beep
+set noerrorbells
 
 " Default encoding
 set encoding=utf-8
@@ -74,8 +77,6 @@ set showcmd
 set history=100
 set undolevels=100
 set virtualedit=onemore
-set undodir=~/.vim/undodir
-set undofile
 set nobackup                " No backup file
 set noswapfile              " No swap file
 
@@ -85,7 +86,6 @@ set splitright
 
 " The auto completion row menu in the bottom of the bar
 set wildignore+=*/tmp/*,*.so.*,*.swp,*.zip
-set wildignorecase
 set wildmenu
 set wildmode=longest,list:longest,full
 let &wildcharm = &wildchar
@@ -131,19 +131,8 @@ let g:syntastic_javascript_checkers = ['jslint', 'jshint']
 let g:syntastic_cpp_compiler_options = ' -std=c++11'
 
 " Airline
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
-
-let g:airline_left_sep = '»'
-let g:airline_left_sep = '▶'
-let g:airline_right_sep = '«'
-let g:airline_right_sep = '◀'
-let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⎇'
-let g:airline_symbols.paste = 'Þ'
-let g:airline_symbols.whitespace = 'Ξ'
-
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Autocommands
@@ -208,7 +197,6 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Cursor colors
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set colorcolumn=80
 hi CursorLine guibg=#333333     " highlight bg color of current line
 hi CursorColumn guibg=#CCCCCC   " highlight cursor column
 hi Cursor guibg=#FFFFFF         " highlight cursor
